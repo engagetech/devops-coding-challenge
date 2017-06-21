@@ -1,0 +1,11 @@
+server {
+    listen   127.0.0.1:80;
+    location /stub_status {
+        allow       127.0.0.1;
+        allow       all;
+        stub_status on;
+    }
+    location / {
+        stub_status on;
+    }
+}

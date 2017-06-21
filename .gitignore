@@ -6,3 +6,4 @@ tmp/*
 !tmp/.keep
 ssh/*
 !ssh/.keep
+*.retry

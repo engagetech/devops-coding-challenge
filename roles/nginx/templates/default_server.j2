@@ -1,0 +1,10 @@
+server {
+  listen        0.0.0.0:80 default_server;
+  location /stub_status {
+    allow       127.0.0.1;
+    stub_status on;
+  }
+  location / {
+    return      444;
+  }
+}
