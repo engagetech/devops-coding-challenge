@@ -3,6 +3,7 @@ aws:
   region:            eu-west-2
   instance_type:     t2.micro
   instance_image:    ami-cc7066a8
+  elb_name:          devops-coding-challenge
   access_key_id:     !vault |
     $ANSIBLE_VAULT;1.1;AES256
     65383734363262633030633365616231346138333863363130323032353833353663643561663930

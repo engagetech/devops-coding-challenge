@@ -1,0 +1,16 @@
+---
+- name:      "configure app version"
+  copy:
+    content: "{{ app_version }}"
+    dest:    "/var/www/html/version.txt"
+    group:   www-data
+    owner:   www-data
+    mode:    0644
+
+- name:      "configure app status"
+  copy:
+    content: "{{ ansible_ec2_instance_id }} - ok"
+    dest:    "/var/www/html/status.txt"
+    group:   www-data
+    owner:   www-data
+    mode:    0644

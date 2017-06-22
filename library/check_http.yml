@@ -1,0 +1,13 @@
+---
+- name:             "get version by http"
+  ignore_errors:    yes
+  uri:
+    url:            "http://{{ address }}/version.txt"
+    return_content: yes
+  register:         webpage
+
+- name: "add new instance to host group"
+  add_host:
+    hostname: "{{ address }}"
+    groupname: webserver-to-restart
+  when: "webpage.content != app_version"
