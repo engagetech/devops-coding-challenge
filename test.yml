@@ -10,6 +10,7 @@
     - vars/aws_settings.yml
     - vars/settings.yml
   tags:
+    - fix
     - check
   tasks:
     - name: "retrieve instances facts"
@@ -43,4 +44,3 @@
   tasks:
     - name: restart nginx
       service: name=nginx state=restarted enabled=yes
-

@@ -3,7 +3,6 @@
 .DS_Store
 ansible-vault.pass
 tmp/*
-!tmp/.keep
 ssh/*
 !ssh/.keep
 *.retry

@@ -28,7 +28,7 @@
       include: library/ec2_instance.yml
 
 ########################################################################################################################
-# Configure instance and deploy app
+# configure instance and deploy app
 ########################################################################################################################
 - name:          "configure instance"
   hosts:         webserver
@@ -39,6 +39,8 @@
     - vars/settings.yml
   roles:
     - nginx
+  pre_tasks:
+    - ec2_facts:
   tasks:
     - name:    "configure application"
       include: library/app.yml

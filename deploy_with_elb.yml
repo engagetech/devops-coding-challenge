@@ -46,9 +46,9 @@
       include: library/ec2_instance.yml
 
 ########################################################################################################################
-# Configure instance, deploy app and add to ELB
+# configure instance, deploy app and add to ELB
 ########################################################################################################################
-- name:          "configure instance"
+- name:          "configure instance, deploy app and add to ELB"
   hosts:         webserver
   become:        yes
   become_method: sudo
