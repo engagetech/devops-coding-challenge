@@ -66,3 +66,20 @@ If we proceed to a phone interview, we’ll be asking questions about why you ma
 #### Why doesn't the test include X?
 
 Good question. Feel free to tell us how to make the test better. Or, you know, fork it and improve it!
+
+***
+## How to run scripts
+
+1. Read [how-to guide](./DEVOPS_CODE_CHALLENGE.md), clone code and configure access to secrets 
+2. Navigate to directory with project code and run
+    * to create and deploy one EC2 instance
+
+    `./deploy.yml`
+
+    * to deploy instance, and register it to ELB
+
+    `./deploy_with_elb.yml`
+3. To check application status on instance run
+
+    `./test.yml`
+
