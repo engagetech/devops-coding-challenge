@@ -1,0 +1,14 @@
+---
+- name: "config nginx status handler"
+  notify: restart nginx
+  template:
+    src:  nginx_status.j2
+    dest: /etc/nginx/sites-available/nginx.status
+    mode: 0644
+
+- name: "enable nginx status handler"
+  notify: restart nginx
+  file:
+    src:   /etc/nginx/sites-available/nginx.status
+    dest:  /etc/nginx/sites-enabled/nginx.status
+    state: link

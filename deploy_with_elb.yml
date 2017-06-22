@@ -1,0 +1,78 @@
+#!/usr/bin/env ansible-playbook
+---
+########################################################################################################################
+# config local ssh key
+########################################################################################################################
+- name:         "configure ssh access"
+  hosts:        localhost
+  tags:
+    - prepare
+  gather_facts: False
+  vars_files:
+    - vars/aws_settings.yml
+  tasks:
+    - name:      "create private ssh key from secrets"
+      copy:
+        content: "{{ aws.ssh_key }}"
+        dest:    "{{ playbook_dir }}/ssh/{{ aws.ssh_key_name }}.pem"
+        mode:    0600
+########################################################################################################################
+# launch elb
+########################################################################################################################
+- name:         "ELB"
+  hosts:        localhost
+  gather_facts: False
+  tags:
+    - launch_elb
+  vars_files:
+    - vars/aws_settings.yml
+    - vars/settings.yml
+  tasks:
+    - name:    "launching ELB and save it dns address as fact"
+      include: library/elb.yml
+
+########################################################################################################################
+# launch instance
+########################################################################################################################
+- name:         "launching instance and adding it to configuration group"
+  hosts:        localhost
+  gather_facts: False
+  tags:
+    - launch_instance
+  vars_files:
+    - vars/aws_settings.yml
+  tasks:
+    - name:    "launch instance and add it to configuration group"
+      include: library/ec2_instance.yml
+
+########################################################################################################################
+# configure instance, deploy app and add to ELB
+########################################################################################################################
+- name:          "configure instance, deploy app and add to ELB"
+  hosts:         webserver
+  become:        yes
+  become_method: sudo
+  gather_facts:  True
+  tags:
+    - config
+  vars_files:
+    - vars/settings.yml
+    - vars/aws_settings.yml
+  roles:
+    - nginx
+  pre_tasks:
+    - ec2_facts:
+  tasks:
+    - name:    "configure application"
+      include: library/app.yml
+  post_tasks:
+    - name:    "add instance to ELB"
+      become:  no
+      local_action:
+        module:         ec2_elb
+        aws_access_key: "{{ aws.access_key_id }}"
+        aws_secret_key: "{{ aws.secret_access_key }}"
+        region:         "{{ aws.region }}"
+        instance_id:    "{{ ansible_ec2_instance_id }}"
+        ec2_elbs:       "{{ aws.elb_name }}"
+        state:          present

@@ -1,0 +1,10 @@
+---
+# tasks file for nginx
+- name: "add ppa and install nginx"
+  include: install.yml
+
+- name: "configure nginx"
+  include: config.yml
+
+#- name: "generate dhparam file"
+#  include: dhparam.yml

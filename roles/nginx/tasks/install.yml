@@ -1,0 +1,7 @@
+---
+- name:   "add nginx repo"
+  apt_repository: repo="ppa:nginx/{{ nginx.nginx|default('stable') }}" update_cache=yes
+
+- name:   "install nginx"
+  apt:    name=nginx
+  notify: restart nginx

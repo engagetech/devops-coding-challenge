@@ -1,0 +1,46 @@
+#!/usr/bin/env ansible-playbook
+---
+########################################################################################################################
+# get instances list and check version
+########################################################################################################################
+- name:         "retrieve instances facts and create dynamic group"
+  hosts:        localhost
+  gather_facts: False
+  vars_files:
+    - vars/aws_settings.yml
+    - vars/settings.yml
+  tags:
+    - fix
+    - check
+  tasks:
+    - name: "retrieve instances facts"
+      ec2_remote_facts:
+        region:           "{{ aws.region }}"
+        aws_access_key:   "{{ aws.access_key_id }}"
+        aws_secret_key:   "{{ aws.secret_access_key }}"
+        filters:
+          instance-state-name: running
+          "tag:deployment":    'devops-coding-challenge'
+      register: ec2_info
+
+    - name: "build addresses list"
+      set_fact:
+        ip_to_check: "{{ ip_to_check|default([]) }} + ['{{ item.public_ip_address }}']"
+      with_items:    "{{ ec2_info.instances }}"
+
+    - name: "check instance app version state"
+      include:       library/check_http.yml address="{{ item }}"
+      with_items:    "{{ ip_to_check }}"
+########################################################################################################################
+# start/restart webserver on failed nodes
+########################################################################################################################
+- name:          "configure instance"
+  hosts:         webserver-to-restart
+  become:        yes
+  become_method: sudo
+  gather_facts:  True
+  tags:
+    - fix
+  tasks:
+    - name: restart nginx
+      service: name=nginx state=restarted enabled=yes

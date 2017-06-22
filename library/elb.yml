@@ -1,0 +1,29 @@
+---
+- name: "launching ELB"
+  ec2_elb_lb:
+    name:             "{{ aws.elb_name }}"
+    aws_access_key:   "{{ aws.access_key_id }}"
+    aws_secret_key:   "{{ aws.secret_access_key }}"
+    region:           "{{ aws.region }}"
+    state:            present
+    zones:
+      - "{{ aws.region }}a"
+    tags:             '{"deployment": "devops-coding-challenge"}'
+    listeners:
+      - protocol:           http
+        load_balancer_port: 80
+        instance_port:      80
+        proxy_protocol:     True
+    health_check:
+      ping_protocol:        http # options are http, https, ssl, tcp
+      ping_port:            80
+      ping_path:            "/status.txt" # not required for tcp or ssl
+      response_timeout:     5 # seconds
+      interval:             30 # seconds
+      unhealthy_threshold:  2
+      healthy_threshold:    10
+  register: elb
+
+- name:      "set fact app_address"
+  set_fact:
+    app_address: "{{ elb.elb.dns_name }}"

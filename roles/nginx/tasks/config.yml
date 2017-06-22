@@ -1,0 +1,27 @@
+---
+- name: "nginx main config - nginx.conf"
+  notify: restart nginx
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: 0644
+
+- name: "set soft	nofile limit to www-data user"
+  pam_limits:
+    domain:     www-data
+    limit_type: soft
+    limit_item: nofile
+    value:      "{{ (nginx.worker_connections * ansible_processor_vcpus * 4)|default (65535) }}"
+    use_max:    yes
+
+- name: "set hard	nofile limit to www-data user"
+  pam_limits:
+    domain:     www-data
+    limit_type: hard
+    limit_item: nofile
+    value:      "{{ (nginx.worker_connections * ansible_processor_vcpus * 4)|default (65535) }}"
+    use_max:    yes
+
+- name: "nginx status"
+  include: status.yml
+  when: nginx.status_on_localhost

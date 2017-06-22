@@ -1,0 +1,46 @@
+#!/usr/bin/env ansible-playbook
+---
+########################################################################################################################
+# config local ssh key
+########################################################################################################################
+- name:         "configure ssh access"
+  hosts:        localhost
+  gather_facts: False
+  vars_files:
+    - "vars/aws_settings.yml"
+  tasks:
+    - name:      "create private ssh key from secrets"
+      copy:
+        content: "{{ aws.ssh_key }}"
+        dest:    "{{ playbook_dir }}/ssh/{{ aws.ssh_key_name }}.pem"
+        mode:    0600
+
+########################################################################################################################
+# launch instance
+########################################################################################################################
+- name:         "launching instance and adding it to configuration group"
+  hosts:        localhost
+  gather_facts: False
+  vars_files:
+    - "vars/aws_settings.yml"
+  tasks:
+    - name:    "launch instance and add it to configuration group"
+      include: library/ec2_instance.yml
+
+########################################################################################################################
+# configure instance and deploy app
+########################################################################################################################
+- name:          "configure instance"
+  hosts:         webserver
+  become:        yes
+  become_method: sudo
+  gather_facts:  True
+  vars_files:
+    - vars/settings.yml
+  roles:
+    - nginx
+  pre_tasks:
+    - ec2_facts:
+  tasks:
+    - name:    "configure application"
+      include: library/app.yml

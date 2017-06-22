@@ -1,0 +1,6 @@
+---
+- name: "delete default site"
+  notify: restart nginx
+  file:
+    path:  /etc/nginx/sites-enabled/default
+    state: absent

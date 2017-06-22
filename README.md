@@ -1,15 +1,15 @@
 Infrastructure Coding Test
 ==========================
 
-# Goal
+## Goal
 
 Script the creation of a web server, and a script to check the server is up.
 
-# Prerequisites
+## Prerequisites
 
 You will need an AWS account. Create one if you don't own one already. You can use free-tier resources for this test.
 
-# The Task
+## The Task
 
 You are required to set up a new server in AWS. It must:
 
@@ -21,7 +21,7 @@ You are required to set up a new server in AWS. It must:
 1.0.6
 ```
 
-# Mandatory Work
+## Mandatory Work
 
 Fork this repository.
 
@@ -34,7 +34,7 @@ Fork this repository.
 
 Give our account `engagetech` access to your fork, and send us an email when you’re done. Feel free to ask questions if anything is unclear, confusing, or just plain missing.
 
-# Extra Credit
+## Extra Credit
 
 We know time is precious, we won't mark you down for not doing the extra credits, but if you want to give them a go...
 
@@ -44,7 +44,7 @@ We know time is precious, we won't mark you down for not doing the extra credits
 * Run Nginx inside a Docker container.
 * Make the checker script SSH into the instance, check if Nginx is running and start it if it isn't.
 
-# Questions
+## Questions
 
 #### What scripting languages can I use?
 
@@ -66,3 +66,20 @@ If we proceed to a phone interview, we’ll be asking questions about why you ma
 #### Why doesn't the test include X?
 
 Good question. Feel free to tell us how to make the test better. Or, you know, fork it and improve it!
+
+***
+## How to run scripts
+
+1. Read [how-to guide](./DEVOPS_CODE_CHALLENGE.md), clone code and configure access to secrets 
+2. Navigate to directory with project code and run
+    * to create and deploy one EC2 instance
+
+    `./deploy.yml`
+
+    * to deploy instance, and register it to ELB
+
+    `./deploy_with_elb.yml`
+3. To check application status on instance run
+
+    `./test.yml`
+

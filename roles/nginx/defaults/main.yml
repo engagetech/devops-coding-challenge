@@ -1,0 +1,7 @@
+---
+# defaults file for nginx
+nginx:
+  nginx:                 stable
+  worker_connections:    4096
+  status_on_localhost:   True
+  delete_default_server: True
