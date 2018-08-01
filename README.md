@@ -1,19 +1,15 @@
-Infrastructure Coding Test
-==========================
+DevOps Pairing Exercise
+=======================
 
 # Goal
 
-Script the creation of a web server, and a script to check the server is up.
-
-# Prerequisites
-
-You will need an AWS account. Create one if you don't own one already. You can use free-tier resources for this test.
+Automate the creation of a web server, and a script to check the server is up.
 
 # The Task
 
-You are required to set up a new server in AWS. It must:
+You are required to provison and deploy a new service in AWS. It must:
 
-* Be publicly accessible.
+* Be publicly accessible, but *only* on port 80.
 * Run Nginx.
 * Serve a `/version.txt` file, containing only static text representing a version number, for example:
 
@@ -21,25 +17,39 @@ You are required to set up a new server in AWS. It must:
 1.0.6
 ```
 
+# Prerequisites
+
+Some or all of the AWS information below can help you achieve this task:
+
+               region: eu-west-1
+               vpc-id: vpc-8bc8d2ef
+    public subnet-ids: subnet-48de3e2f (AZ a), subnet-313cdf78 (AZ b)
+            S3 bucket: s3://101waystest/
+
+AWS credentials will be provided when the exercise begins.
+
 # Mandatory Work
 
 Fork this repository.
 
 * Provide instructions on how to create the server.
-* Provide a script that can be run periodically (and externally) to check if the server is up and serving the expected version number. Use your scripting language of choice.
+
+* Bootstrap and provision the server however you wish. Use user-data or a configuration management tool (such as Puppet, Chef or Ansible). Alternatively launch an idempotent AMI with packer and terraform, or even via the console. Be prepared to justify your decision!
+
+* Provide a script that can be run periodically (and externally) to check if the server is up and serving the expected version number. 
+
 * Alter the README to contain the steps required to:
   * Create the server.
-  * Run the checker script.
-* Provide us IAM credentials to login to the AWS account. If you have other resources in it make sure we can only access what is related to this test.
+  * Run the health check script.
 
-Give our account `engagetech` access to your fork, and send us an email when you’re done. Feel free to ask questions if anything is unclear, confusing, or just plain missing.
+Give user `aeells|schmiegelow` access to your fork.
+Feel free to ask questions as you go if anything is unclear, confusing, or just plain missing.
 
 # Extra Credit
 
-We know time is precious, we won't mark you down for not doing the extra credits, but if you want to give them a go...
+This exercise is timeboxed, but if any of these shortcut the process by making it easier in the long-run they might be worth considering up front. We won't mark you down for not doing the extra credits, but if you want to give them a go...
 
-* Use a CloudFormation template to set up the server.
-* Use a configuration management tool (such as Puppet, Chef or Ansible) to bootstrap the server.
+* Make the service resilient in 2 availability zones.
 * Put the server behind a load balancer.
 * Run Nginx inside a Docker container.
 * Make the checker script SSH into the instance, check if Nginx is running and start it if it isn't.
@@ -48,11 +58,7 @@ We know time is precious, we won't mark you down for not doing the extra credits
 
 #### What scripting languages can I use?
 
-Anyone you like. You’ll have to justify your decision. We use Bash, Python and JavaScript internally. Please pick something you're familiar with, as you'll need to be able to discuss it.
-
-#### Will I have to pay for the AWS charges?
-
-No. You are expected to use free-tier resources only and not generate any charges. Please remember to delete your resources once the review process is over so you are not charged by AWS.
+Any you like. You’ll have to justify your decision. We use Bash, Python, Groovy and JavaScript internally. Please pick something you're familiar with, as you'll need to be able to discuss it.
 
 #### What will you be grading me on?
 
@@ -60,9 +66,5 @@ Scripting skills, elegance, understanding of the technologies you use, security,
 
 #### Will I have a chance to explain my choices?
 
-Feel free to comment your code, or put explanations in a pull request within the repo.
-If we proceed to a phone interview, we’ll be asking questions about why you made the choices you made.
-
-#### Why doesn't the test include X?
-
-Good question. Feel free to tell us how to make the test better. Or, you know, fork it and improve it!
+Hopefully this will emerge as we pair and converse. 
+But feel free to comment your code, or put explanations in a pull request within the repo.
