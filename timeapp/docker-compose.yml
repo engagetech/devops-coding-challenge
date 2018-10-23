@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  timeapp:
+    build: ./
+    restart: always
+    environment:
+      - VIRTUAL_PORT=8080
+    env_file:
+      - ./timeapp.env
+    networks:
+      - proxy
+
+  proxy:
+    image: jwilder/nginx-proxy:alpine-0.7.0
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy
+
+networks:
+  proxy:
