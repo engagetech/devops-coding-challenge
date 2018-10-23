@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  roles:
+    - role: geerlingguy.docker
+      become: true
+
+  tasks:
+    - name: Move timeapp to /opt
+      become: true
+      command: "mv /home/admin/timeapp /opt/"
+
+    - name: Pull docker images
+      become: true
+      command: "docker-compose pull"
+      args:
+        chdir: /opt/timeapp/
+
+    - name: Build timeapp docker image
+      become: true
+      command: "docker-compose build"
+      args:
+        chdir: /opt/timeapp/

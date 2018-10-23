@@ -1,0 +1,8 @@
+{
+  "source_ami": "ami-0483f1cc1c483803f",
+  "vpc_id": "",
+  "subnet_id": "",
+  "region": "eu-west-1",
+  "docker_version": "18.06.1",
+  "timeapp_version": "0.0.1"
+}
