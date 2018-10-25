@@ -1,0 +1,3 @@
+dns_public_zone_id=""
+ec2_keypair=""
+ec2_ami_id=""

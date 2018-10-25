@@ -27,6 +27,13 @@ $ cat variables.json
 
 ## Usage
 
+Load your AWS credentials. E.g.
+
+```
+export AWS_ACCESS_KEY_ID=heresomeaccesskey
+export AWS_SECRET_ACCESS_KEY=heresomesecretkey
+```
+
 Install Ansible requirements:
 
 ```
@@ -38,3 +45,12 @@ Build Timeapp image:
 ```
 $ packer build -var-file=variables.json ./packer.json
 ```
+
+If everything goes as expected, at the end of the previous command output you'll get the new ami:
+
+```
+==> Builds finished. The artifacts of successful builds are:
+--> amazon-ebs: AMIs were created:
+eu-west-1: ami-09cf0fb8ff8269c8f
+```
+This will be used on the next step with Terraform.
