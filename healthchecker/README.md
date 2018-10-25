@@ -7,17 +7,16 @@ Healthchecker is a small application that makes HTTP GET requests to [Timeapp's]
 ```
 $ go build healthchecker.go
 $ ./healthchecker.go http://timeapp.stg.engagetech.capsule.one/now
+Clock synchronized. Time diff: 0.431881s
+Clock synchronized. Time diff: 0.101007s
+Clock desynchronized. Time diff: 1.422374s
+Clock synchronized. Time diff: 0.096573s
 ```
 
 ### Docker
 
 ```
 $ docker build --rm -t hcker .
-```
-
-## Usage
-
-```
 $ docker run --rm hcker healthchecker http://timeapp.stg.engagetech.capsule.one/now
 Clock synchronized. Time diff: 0.431881s
 Clock synchronized. Time diff: 0.101007s
