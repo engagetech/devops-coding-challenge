@@ -1,65 +1,59 @@
 DevOps Coding Test
 ==================
 
-# Goal
+The goal of this coding test was _"Script the creation of a service, and a healthcheck script to verify it is up and responding correctly"_.
 
-Script the creation of a service, and a healthcheck script to verify it is up and responding correctly.
+## Packer and Ansible
 
-# Prerequisites
+In my proposed solution I've implemented an immutable infrastructure approach, easily achievable using [Packer](https://packer.io). The setup of this image is done using [Ansible](https://www.ansible.com), which allows a more flexible and developer friendly syntax when compared to regular shell scripts, specially if you leverage Ansible Roles.
 
-You will need an AWS account. Create one if you don't own one already. You can use free-tier resources for this test.
+In this case I've used Ansible to install Docker via a community Ansible Role, and added a playbook task that will prepare the Timeapp to be ready to run.
 
-# The Task
 
-You are required to provision and deploy a new service in AWS. It must:
+## Terraform
 
-* Be publicly accessible, but *only* on port 80.
-* Return the current time on `/now`.
+When the AMI is ready, it can be used by [Terraform](https://www.terraform.io) scripts to create all necessary AWS resources:
 
-# Mandatory Work
+ - VPC
+ - Public Subnets
+ - Private Subnets
+ - Auto Scaling Group
+ - Security Groups
+ - Application Load Balancer
+ - DNS Record
 
-Fork this repository.
+ The setup is as follows:
+ 
+  - Timeapp instances are spinned through the Auto Scaling Group, in private subnets across different Availability Zones. These instances are not accessible to the internet, and only allow connections to the port `80` that are originated from the Aplication Load Balancer.
+  - The Application Load Balancer is associated with the public subnets created with the VPC, and redirects requests made to port `80` to the Timeapp instances, via Target Group that is associated to the Timeapp Autoscaling Group.
+  - The Load Balancer assures the traffic is distributed through all Healthy instances and drains Unhealthy ones, resulting in the Auto Scaling Group terminating the Unhealthy and provisioning new ones.
+  - The Auto Scaling Group assures there is always more than one instance running, providing us with high availability.
+ 
+With the use of Terraform Modules, this setup is highly configurable and flexible to all sorts of changes, as well as easily reproducible.
 
-* Script your service using your configuration management and/or infrastructure-as-code tool of choice.
-* Provision the service in your AWS account.
-* Write a healthcheck script that can be run externally to periodically check if the service is up and its clock is not desynchronised by more than 1 second.
-* Alter the README to contain instructions required to:
-  * Provision the service.
-  * Run the healthcheck script.
-* Provide us IAM credentials to login to the AWS account. If you have other resources in it make sure we can only access what is related to this test.
+## Timeapp and Healthchecker
 
-Once done, give us access to your fork. Feel free to ask questions as you go if anything is unclear, confusing, or just plain missing.
+Timeapp and healthchecker apps were both developed with Golang in very short files, accompanied by a respective Dockerfile for easiness of deployment.
 
-# Extra Credit
+## Usage Instructions
 
-We know time is precious, we won't mark you down for not doing the extra credits, but if you want to give them a go...
+ - [Timeapp](./timeapp/README.md)
+ - [Healthchecker](./healthchecker/README.md)
+ - [Packer scripts](./packer/README.md)
+ - [Terraform scripts](./terraform/README.md)
 
-* Run the service inside a Docker container.
-* Make it highly available.
-* We value CloudFormation and rely on it heavily. If you already know CF, we’d love to see you use it.
+## Possible improvements
 
-# Questions
+There is always room for improvement, and possible steps I see to improve this solution even further are:
 
-#### What scripting languages can I use?
+ - Add serverspec tests to Packer
+ - Have the Docker image built by a different pipeline and available in a Docker Registry instead of building it everytime
+ - Increase and decrease number of Auto Scaling Group instances based on CPU system load (cpu usage, etc..)
+ - Add logging and monitoring tooling to Timeapp instances
 
-Anyone you like. You’ll have to justify your decision. We use CloudFormation, Puppet and Python internally. Please pick something you're familiar with, as you'll need to be able to discuss it.
+## Related work
 
-#### Will I have to pay for the AWS charges?
+You can check previous work I did using this kind of approach in my blogpost [Automating infrastructure: playing factorio on AWS
+](https://capsule.one/blog/2017/09/28/automating-infrastructure-playing-factorio-on-aws/) where I leverage the same tools to deploy a Factorio server, this time using AWS API Gateway and AWS Lambda.
 
-No. You are expected to use free-tier resources only and not generate any charges. Please remember to delete your resources once the review process is over so you are not charged by AWS.
-
-#### What will you be grading me on?
-
-Scripting skills, security, elegance, understanding of the technologies you use, documentation.
-
-#### What will you not take into account?
-
-Brevity. We know there are very simple ways of solving this exercise, but we need to see your skills. We will not be able to evaluate you if you provide five lines of code.
-
-#### Will I have a chance to explain my choices?
-
-If we proceed to a phone interview, we’ll be asking questions about why you made the choices you made. Comments in the code are also very helpful.
-
-#### Why doesn't the test include X?
-
-Good question. Feel free to tell us how to make the test better. Or, you know, fork it and improve it!
+Code available on [Github](https://github.com/RCM7/aws-factorio).

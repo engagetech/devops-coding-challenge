@@ -1,6 +1,6 @@
 # Healthchecker
 
-Healthchecker is a small application that makes HTTP GET requests to [Timeapp's](../timeapp/README.md) every 2 seconds and prints whether the clock is synchronized or not, and the respective time difference in seconds.
+Healthchecker is a small application that makes HTTP GET requests to [Timeapp](../timeapp/README.md) every 2 seconds and prints whether the clock is synchronized or not, and the respective time difference in seconds.
 
 ## Build and Run
 
