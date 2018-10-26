@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "source_ami": "{{env `source_ami`}}",
+    "vpc_id": "{{env `vpc_id`}}",
+    "subnet_id": "{{env `subnet_id`}}",
+    "region": "{{env `region`}}",
+    "docker_version": "{{env `docker_version`}}",
+    "timeapp_version": "{{env `timeapp_version`}}"
+  },
+
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "{{user `region`}}",
+    "source_ami": "{{user `source_ami`}}",
+    "instance_type": "t2.micro",
+    "ssh_username": "admin",
+    "associate_public_ip_address": true,
+    "vpc_id": "{{user `vpc_id`}}",
+    "subnet_id": "{{user `subnet_id`}}",
+    "ami_name": "timeapp-{{user `timeapp_version`}}-({{isotime \"20060102150405\"}})"
+  }],
+
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../timeapp",
+      "destination": "/home/admin/timeapp"
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "./playbook.yml",
+      "extra_arguments": [ "--extra-vars", "docker_package='docker-ce={{user `docker_version`}}~ce~3-0~debian'"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+
+  timeapp:
+    build: ./
+    restart: always
+    ports:
+      - "80:8080"
+
